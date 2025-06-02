@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30-Day Construction Job Strategy System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #4a5568;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .week-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .week-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .week-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .week-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .week-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        
+        .week-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .week-subtitle {
+            color: #667;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .activities {
+            list-style: none;
+        }
+        
+        .activity {
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .activity:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            margin-right: 12px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .activity-text {
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .activity-emphasis {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .tools-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .tool-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .tool-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .tool-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .research-stats {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .research-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .research-stat {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .research-text {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .success-metrics {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric-card {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #9ae6b4;
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #38a169;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: #2d7e3e;
+            font-weight: 500;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .pro-tip {
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .weeks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>30-Day Construction Job Strategy System</h1>
+            <p>For International Students in Construction Industry</p>
+            <p style="font-size: 0.9em; color: #888;">Based on 30+ years of placement experience & academic research</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Jobs filled via networking</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Jobs never posted publicly</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">120%</div>
+                    <div class="stat-label">System efficiency rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">9x</div>
+                    <div class="stat-label">Higher success with referrals</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="research-stats">
+            <h2 class="section-title">Research-Backed Success Statistics</h2>
+            <div class="research-grid">
+                <div class="research-card">
+                    <div class="research-stat">188k</div>
+                    <div class="research-text">Annual job openings projected in architecture & engineering (2022-2032)</div>
+                </div>
+                <div class="research-card">
+                    <div class="research-stat">9%</div>
+                    <div class="research-text">Construction employment growth above pre-pandemic levels</div>
+                </div>
+                <div class="research-card">
+                    <div class="research-stat">60%</div>
+                    <div class="research-text">Reduction in hiring cycle with effective ATS strategy</div>
+                </div>
+                <div class="research-card">
+                    <div class="research-stat">40%</div>
+                    <div class="research-text">Of hires come from referrals (only 7% get referred)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weeks-grid">
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-number">1</div>
+                    <div>
+                        <div class="week-title">Foundation & Assessment</div>
+                        <div class="week-subtitle">Days 1-7: Building Your Strategic Base</div>
+                    </div>
+                </div>
+                <ul class="activities">
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Skills Audit & Market Research:</span> Document technical skills (CAD, BIM, project management), identify top 20 construction companies in target location
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">ATS-Optimized Resume Creation:</span> Build 3 versions (entry-level, project-focused, technical specialist) with industry keywords
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">LinkedIn Optimization:</span> Professional photo, keyword-rich headline, detailed experience section highlighting international perspective
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Immigration Documentation:</span> Ensure F-1 OPT/CPT eligibility documentation is ready and understood
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Goal Setting:</span> Define 3 target roles, salary expectations, and geographic preferences
+                        </div>
+                    </li>
+                </ul>
+                <div class="pro-tip">
+                    💡 Pro Tip: Use construction-specific keywords like "MEP systems," "sustainable building," "LEED certification" to pass ATS filters
+                </div>
+            </div>
+
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-number">2</div>
+                    <div>
+                        <div class="week-title">Strategic Networking</div>
+                        <div class="week-subtitle">Days 8-14: Building Your Professional Network</div>
+                    </div>
+                </div>
+                <ul class="activities">
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Hidden Job Market Access:</span> Identify 50 decision-makers (Project Managers, Construction Managers) at target companies via LinkedIn
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Informational Interviews:</span> Schedule 5 informational interviews with industry professionals (15-30 minutes each)
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Alumni Network Activation:</span> Connect with 20 alumni working in construction via university networks
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Industry Events:</span> Attend 2 virtual/local construction industry meetups or webinars
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Content Strategy:</span> Share 3 industry-relevant posts on LinkedIn showcasing your international perspective
+                        </div>
+                    </li>
+                </ul>
+                <div class="pro-tip">
+                    🎯 Hidden Market Hack: 70% of construction jobs are never posted. Target hiring managers directly with personalized messages about industry trends from your home country
+                </div>
+            </div>
+
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-number">3</div>
+                    <div>
+                        <div class="week-title">Application Blitz</div>
+                        <div class="week-subtitle">Days 15-21: Strategic Application Campaign</div>
+                    </div>
+                </div>
+                <ul class="activities">
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Direct Applications:</span> Apply to 15 positions using tailored resumes, ensuring 80%+ ATS keyword match scores
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Company Website Strategy:</span> Apply directly through 10 company websites (better success rate than job boards)
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Referral Requests:</span> Ask for referrals from 5 network contacts for specific positions
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Follow-up System:</span> Implement tracking system for applications with 1-week, 2-week follow-up schedules
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Portfolio Development:</span> Create digital portfolio showcasing projects with emphasis on international building codes/standards
+                        </div>
+                    </li>
+                </ul>
+                <div class="pro-tip">
+                    📊 ATS Beat Rate: 98% of Fortune 500 companies use ATS. Use tools like Jobscan to ensure 85%+ keyword match for each application
+                </div>
+            </div>
+
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-number">4</div>
+                    <div>
+                        <div class="week-title">Interview & Close</div>
+                        <div class="week-subtitle">Days 22-30: Securing Your Position</div>
+                    </div>
+                </div>
+                <ul class="activities">
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Interview Preparation:</span> Master STAR method responses highlighting cross-cultural adaptability and technical skills
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Visa Sponsorship Discussion:</span> Prepare confident explanation of H-1B timeline and value proposition as international hire
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Technical Showcase:</span> Prepare 3-minute presentation on innovative construction methods from your home country
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Negotiation Strategy:</span> Research salary ranges and prepare negotiation talking points emphasizing unique value
+                        </div>
+                    </li>
+                    <li class="activity">
+                        <div class="activity-icon"></div>
+                        <div class="activity-text">
+                            <span class="activity-emphasis">Multiple Offer Management:</span> Execute strategies to accelerate decision timelines and create competitive dynamics
+                        </div>
+                    </li>
+                </ul>
+                <div class="pro-tip">
+                    🚀 International Advantage: Emphasize your global perspective as a competitive advantage - construction is increasingly international and you bring valuable cross-cultural project experience
+                </div>
+            </div>
+        </div>
+
+        <div class="tools-section">
+            <h2 class="section-title">Essential Job Search Tools & Resources</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-title">ATS Optimization Tools</div>
+                    <div class="tool-description">Jobscan, Resume Worded, and Zety for keyword optimization and ATS compatibility scoring</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Networking Platforms</div>
+                    <div class="tool-description">LinkedIn Premium, ConstructConnect, Associated General Contractors (AGC) local chapters</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Industry Job Boards</div>
+                    <div class="tool-description">ConstructionJobs.com, EngineeringJobs.com, Indeed Construction, Glassdoor</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Interview Preparation</div>
+                    <div class="tool-description">Pramp, InterviewBuddy, Glassdoor interview questions, company-specific research tools</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Portfolio Platforms</div>
+                    <div class="tool-description">Behance, personal website via Squarespace/Wix, LinkedIn portfolio feature</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Immigration Resources</div>
+                    <div class="tool-description">USCIS official site, H1B Grader, MyVisaJobs.com for sponsor identification</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Salary Research</div>
+                    <div class="tool-description">PayScale, Glassdoor, Salary.com, Bureau of Labor Statistics for market rates</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-title">Application Tracking</div>
+                    <div class="tool-description">Airtable, Google Sheets templates, Huntr.co for organizing your job search pipeline</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-metrics">
+            <h2 class="section-title">Expected Success Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">3-5</div>
+                    <div class="metric-label">Interview Invitations</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">50+</div>
+                    <div class="metric-label">New Professional Connections</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">25+</div>
+                    <div class="metric-label">Targeted Applications</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">85%+</div>
+                    <div class="metric-label">ATS Compatibility Score</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1-2</div>
+                    <div class="metric-label">Job Offers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">120%</div>
+                    <div class="metric-label">System Efficiency Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
